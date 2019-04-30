@@ -1,0 +1,113 @@
+<nav class="nav">
+  <a class="nav-link" href="#" (click)="Telas('inicial')">Inicial</a>
+  <a class="nav-link" href="#" (click)="Telas('cadastro')">Cadastrar</a>
+  <a class="nav-link" href="#" (click)="Telas('publicar')">Publicar</a>
+  <a class="nav-link" href="#"(click)="Telas('estatistica')">Estatistica</a>
+</nav>
+
+    <div *ngIf="tela=='inicial'" class="container">
+      <h1>Notícias</h1>
+      <div>
+        <ul>
+          <li *ngFor= "let publicada of service.cadastra()">
+            {{publicada.titulo}} 
+            <button class="btn btn-primary" (click)="Telas('ler')" (click)="service.lerNoticia(publicada)">Ler</button>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+
+
+    <div *ngIf = "tela=='cadastro'" class="container">
+      <h1>Cadastro</h1>
+      <form #cadastro="ngForm">
+        <div class="form-group">
+          <label for="nome">Autor</label>
+          <select class="form-control" name="autor" id="autor" [(ngModel)]="autor" required>
+            <option *ngFor="let a of service.autor">{{a.nome}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+            <label for="nome">Título</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" [(ngModel)]="titulo" required>
+          </div>
+        <div class="form-group">
+          <label for="nome">Conteúdo</label>
+          <textarea class="form-control" id="conteudo" name="conteudo" [(ngModel)]="conteudo" required></textarea>
+        </div>
+        <button class="btn btn-primary" (click)="salvar()" [disabled]="!cadastro.form.valid">Salvar</button>
+      </form>
+    </div>
+    
+    <div *ngIf="tela == 'publicar'" class="container">
+      <h2>Publicar</h2>
+      <div>
+        <ul>
+          <li *ngFor= "let noticia of service.publicar()">
+            {{noticia.titulo}} <button class="btn btn-primary" (click)="service.mudaStatus(noticia)">Publicar</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf = "tela=='ler'" class="container">
+      <div>
+        <h1>Titulo:{{service.lerNoticiaSelecionada.titulo}}</h1>
+        <h4>Autor: <br>{{service.lerNoticiaSelecionada.autor}}</h4>
+        <p>Conteúdo: <br> {{service.lerNoticiaSelecionada.conteudo}}</p>
+      </div>
+    </div>
+
+
+
+    <div *ngIf="tela == 'estatistica'" class="container">
+      <div>
+        <table class="table">
+      
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Views</th>
+                <th scope="col">Titulo</th>
+                <th scope="col">Autor</th>
+             
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let noticia of service.Ranking()">
+                <th scope="row">{{ noticia.view }}</th>
+                <td>{{ noticia.titulo }}</td>
+                <td>{{ noticia.autor }}</td>
+              </tr>          
+            </tbody>
+          </table>
+          
+        </div>
+
+    
+    <div >
+        <table class="table">
+      
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Autor</th>
+             
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let autor of service.RankingAutores()">
+                <th scope="row">{{ autor.noticias }}</th>
+                <td>{{ autor.nome }}</td>
+              </tr>          
+            </tbody>
+          </table>
+    </div>
+
+    <div>
+     Autor que mais publicou: {{service.AutorMaisPubicou().nome}}
+    </div>
+
+
+    </div>
